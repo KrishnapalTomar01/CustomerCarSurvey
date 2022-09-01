@@ -1,6 +1,7 @@
 const formId = "#CarSurveyForm";
 const genderDropdownId = "#genderDropdown";
-let currentUser;
+const ageTextId = "#Age";
+const selectGenderId = "#selectGender";
 var GenderOptions;
 (function (GenderOptions) {
     GenderOptions[GenderOptions["M"] = 0] = "M";
@@ -13,6 +14,16 @@ var DriveTrain;
     DriveTrain["RWD"] = "RWD";
     DriveTrain["DontKnow"] = "I Don't know";
 })(DriveTrain || (DriveTrain = {}));
+let currentUser = {
+    age: 0,
+    gender: GenderOptions.M,
+    driveTrainType: null,
+    hasCarLicense: null,
+    isFirstCar: null,
+    isWorriedForEmissions: null,
+    numberOfCars: null,
+    carTypes: null
+};
 $(function () {
     var $signupForm = $(formId);
     $signupForm.validate({ errorElement: 'em' });
@@ -28,8 +39,7 @@ $(function () {
                 var xy = validator.element(this);
                 stepIsValid = stepIsValid && (typeof xy == 'undefined' || xy);
             });
-            console.log(i);
-            return stepIsValid;
+            return stepIsValid && UpdateValuesOfUserResponse(i);
         },
         progress: function (i, count) {
             $('#progress-complete').width('' + (i / count * 100) + '%');
@@ -38,6 +48,22 @@ $(function () {
     console.log("Form initialized");
     InitializeGenderDropdown();
 });
+const UpdateValuesOfUserResponse = (i) => {
+    switch (i) {
+        case 0:
+            console.log($(ageTextId).val());
+            currentUser.age = Number($(ageTextId).val());
+            console.log("currentUser = ");
+            console.log(currentUser);
+            if (currentUser.age < 18) {
+                location.href = "/survey/endsurvey";
+                return false;
+            }
+            return true;
+        default:
+            return false;
+    }
+};
 const InitializeGenderDropdown = () => {
     var $GenderDropdown = $(genderDropdownId);
     $GenderDropdown
@@ -47,10 +73,14 @@ const InitializeGenderDropdown = () => {
     }).addClass("col-md-3"));
     const GenderArray = Object.keys(GenderOptions).filter((v) => isNaN(Number(v)));
     for (const val of GenderArray) {
-        $('#selectGender').append($(document.createElement('option')).prop({
+        $(selectGenderId).append($(document.createElement('option')).prop({
             value: val,
             text: val
         }));
     }
+    $(selectGenderId).on('change', function () {
+        let genderVal = $(this).val().toString();
+        currentUser.gender = GenderOptions[genderVal];
+    });
 };
 //# sourceMappingURL=surveyIndex.js.map

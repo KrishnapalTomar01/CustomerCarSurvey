@@ -1,6 +1,7 @@
 const formId = "#CarSurveyForm";
 const genderDropdownId = "#genderDropdown";
-let currentUser: IUserResponse;
+const ageTextId = "#Age";
+const selectGenderId = "#selectGender"
 
 enum GenderOptions {
     M,
@@ -8,12 +9,22 @@ enum GenderOptions {
     Other
 }
 
-enum DriveTrain
-{
+enum DriveTrain {
     FWD = "FWD",
     RWD = "RWD",
     DontKnow = "I Don't know"
 }
+
+let currentUser: IUserResponse = {
+    age : 0,
+    gender : GenderOptions.M,
+    driveTrainType: null,
+    hasCarLicense: null,
+    isFirstCar : null,
+    isWorriedForEmissions : null,
+    numberOfCars : null,
+    carTypes : null
+};
 
 $(function () {
     var $signupForm = $(formId);
@@ -32,8 +43,7 @@ $(function () {
                 var xy = validator.element(this);
                 stepIsValid = stepIsValid && (typeof xy == 'undefined' || xy);
             });
-            console.log(i);
-            return stepIsValid;
+            return stepIsValid && UpdateValuesOfUserResponse(i);
         },
         progress: function (i, count) {
             $('#progress-complete').width('' + (i / count * 100) + '%');
@@ -42,6 +52,22 @@ $(function () {
     console.log("Form initialized");
     InitializeGenderDropdown();
 });
+
+const UpdateValuesOfUserResponse = (i: number) : boolean => {
+    switch(i) {
+        case 0: 
+            currentUser.age = Number($(ageTextId).val());
+            if(currentUser.age < 18){
+                location.href = "/survey/endsurvey";
+                return false;
+            }
+            return true;
+        case 1:
+            break;
+        default:
+            return false;
+    }
+}
 
 const InitializeGenderDropdown = () => {
     var $GenderDropdown = $(genderDropdownId);
@@ -56,9 +82,16 @@ const InitializeGenderDropdown = () => {
 
     const GenderArray = Object.keys(GenderOptions).filter((v) => isNaN(Number(v)));
     for (const val of GenderArray) {
-        $('#selectGender').append($(document.createElement('option')).prop({
+        $(selectGenderId).append($(document.createElement('option')).prop({
             value: val,
             text: val
         }))
     }
+
+    $(selectGenderId).on('change', function()
+    {
+        let genderVal : string  = $(this).val().toString();
+        currentUser.gender = (<any>GenderOptions)[genderVal];
+    });
+
 }

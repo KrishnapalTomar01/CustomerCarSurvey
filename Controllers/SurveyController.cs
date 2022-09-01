@@ -50,4 +50,8 @@ public class SurveyController : Controller
         return View();
     }
 
+    public IActionResult EndSurvey(){
+        return View();
+    }
+
 }
