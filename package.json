@@ -1,0 +1,13 @@
+{
+  "name": "car-survey-app",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jquery": "3.3.33"
+  },
+  "dependencies": {
+    "@types/jquery.validation": "^1.16.7"
+  }
+}

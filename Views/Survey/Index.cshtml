@@ -1,0 +1,165 @@
+@{
+    ViewData["Title"] = "Survey Page";
+}
+
+<h1>
+    Welcome to survey
+</h1>
+
+@* @if (!TempData.ContainsKey("FormPage") || (TempData["FormPage"] as Nullable<int>).GetValueOrDefault() == 1)
+{
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Age, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.Gender, new SelectList(Enum.GetValues(typeof(Gender))), "Select Gender")
+            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Next" class="btn btn-default" />
+        </div>
+    </div>
+
+</div>
+    }
+
+} *@
+@* 
+@if ((TempData["FormPage"] as Nullable<int>).GetValueOrDefault() == 2)
+{
+    <div>Second form Page</div>
+
+} *@
+
+<div class="row wrap my-style-test">
+    <div class="col-lg-12">
+
+        <div id='progress'>
+            <div id='progress-complete'></div>
+        </div>
+
+        <form id="CarSurveyForm" action="">
+            <fieldset>
+                <legend>User information</legend>
+                <div class="form-group">
+                    <label for="Age">Age</label>
+                    <input id="Age" type="number" min="1" max="100" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="Gender">Gender</label>
+                    <div id="genderDropdown"></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Company information</legend>
+                <div class="form-group">
+                    <label for="CompanyName">Company Name</label>
+                    <input id="CompanyName" type="text" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="Website">Website</label>
+                    <input id="Website" type="text" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="CompanyEmail">CompanyEmail</label>
+                    <input id="CompanyEmail" type="text" class="form-control" />
+                </div>
+            </fieldset>
+
+            <fieldset class="form-horizontal" role="form">
+                <legend>Billing information</legend>
+                <div class="form-group">
+                    <label for="NameOnCard" class="col-sm-2 control-label">Name on Card</label>
+                    <div class="col-sm-10"><input id="NameOnCard" type="text" class="form-control" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="CardNumber" class="col-sm-2 control-label">Card Number</label>
+                    <div class="col-sm-10"><input id="CardNumber" type="text" class="form-control" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="CreditcardMonth" class="col-sm-2 control-label">Expiration</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <select id="CreditcardMonth" class="form-control col-sm-2">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3">
+                                <select id="CreditcardYear" class="form-control">
+                                    <option value="2009">2009</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2011">2011</option>
+                                    <option value="2012">2012</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Address1" class="col-sm-2 control-label">Address 1</label>
+                    <div class="col-sm-10"><input id="Address1" type="text" class="form-control" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="Address2" class="col-sm-2 control-label">Address 2</label>
+                    <div class="col-sm-10"><input id="Address2" type="text" class="form-control" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="Zip" class="col-sm-2 control-label">ZIP</label>
+                    <div class="col-sm-4"><input id="Zip" type="text" class="form-control" /></div>
+                    <label for="Country" class="col-sm-2 control-label">Country</label>
+                    <div class="col-sm-4"><select id="Country" class="form-control">
+                            <option value="CA">Canada</option>
+                            <option value="US">United States of America</option>
+                            <option value="GB">United Kingdom (Great Britain)</option>
+                            
+                        </select>
+                    </div>
+            </fieldset>
+            <p>
+                <button id="SaveAccount" class="btn btn-primary submit">Submit form</button>
+            </p>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/surveyIndex.js"></script>
+}
