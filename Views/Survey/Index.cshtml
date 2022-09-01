@@ -7,45 +7,45 @@
 </h1>
 
 @* @if (!TempData.ContainsKey("FormPage") || (TempData["FormPage"] as Nullable<int>).GetValueOrDefault() == 1)
-{
+    {
     @using (Html.BeginForm())
     {
-        @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
+    <div class="form-horizontal">
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Age, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
-        </div>
+    @Html.LabelFor(model => model.Age, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+    @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control" } })
+    @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
+    </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.Gender, new SelectList(Enum.GetValues(typeof(Gender))), "Select Gender")
-            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
-        </div>
+    @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+    @Html.DropDownListFor(m => m.Gender, new SelectList(Enum.GetValues(typeof(Gender))), "Select Gender")
+    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+    </div>
     </div>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Next" class="btn btn-default" />
-        </div>
+    <div class="col-md-offset-2 col-md-10">
+    <input type="submit" value="Next" class="btn btn-default" />
+    </div>
     </div>
 
-</div>
+    </div>
     }
 
-} *@
-@* 
-@if ((TempData["FormPage"] as Nullable<int>).GetValueOrDefault() == 2)
-{
+    } *@
+@*
+    @if ((TempData["FormPage"] as Nullable<int>).GetValueOrDefault() == 2)
+    {
     <div>Second form Page</div>
 
-} *@
+    } *@
 
 <div class="row wrap my-style-test">
     <div class="col-lg-12">
@@ -59,7 +59,7 @@
                 <legend>User information</legend>
                 <div class="form-group">
                     <label for="Age">Age</label>
-                    <input id="Age" type="number" min="1" max="100" class="form-control" required />
+                    <input id="Age" name="Age" type="number" min="1" max="100" class="form-control" required />
                 </div>
                 <div class="form-group">
                     <label for="Gender">Gender</label>
@@ -68,18 +68,36 @@
             </fieldset>
 
             <fieldset>
-                <legend>Company information</legend>
+                <legend>Driving License</legend>
                 <div class="form-group">
-                    <label for="CompanyName">Company Name</label>
-                    <input id="CompanyName" type="text" class="form-control" required />
+                    <label for="drivingLicenseRadio">Do you own a driving license?</label>
+                    <div class="container-radio">
+                        <label class="me-3">
+                            <input type="radio" value="Yes" name="drivingLicenseRadio">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" value="No" name="drivingLicenseRadio">
+                            No, I prefer using other transport
+                        </label>
+                    </div>
                 </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>First Car</legend>
                 <div class="form-group">
-                    <label for="Website">Website</label>
-                    <input id="Website" type="text" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label for="CompanyEmail">CompanyEmail</label>
-                    <input id="CompanyEmail" type="text" class="form-control" />
+                    <label for="firstCarRadio">Is this your first car?</label>
+                    <div class="container-radio">
+                        <label class="me-3">
+                            <input type="radio" value="Yes" name="firstCarRadio">
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" value="No" name="firstCarRadio">
+                            No
+                        </label>
+                    </div>
                 </div>
             </fieldset>
 
@@ -147,7 +165,7 @@
                             <option value="CA">Canada</option>
                             <option value="US">United States of America</option>
                             <option value="GB">United Kingdom (Great Britain)</option>
-                            
+
                         </select>
                     </div>
             </fieldset>
@@ -161,5 +179,5 @@
 
 @section Scripts
 {
-    <script src="~/js/surveyIndex.js"></script>
+<script src="~/js/surveyIndex.js"></script>
 }

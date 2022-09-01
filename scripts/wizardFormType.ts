@@ -1,6 +1,7 @@
 type wizardFormType = {
-    validateBeforeNext(obj: any, obj2: any, step: number): void;
-    progress(i: number, count: number) : void;
+    validateBeforeNext(obj: any, obj2: any, step: number): boolean,
+    progress(i: number, count: number) : void,
+    skipNextStep(i : number) : boolean,
     submitButton: string,
     nextBtnClass: string,
     prevBtnClass: string,

@@ -2,6 +2,8 @@ const formId = "#CarSurveyForm";
 const genderDropdownId = "#genderDropdown";
 const ageTextId = "#Age";
 const selectGenderId = "#selectGender";
+const drivingLicenseRadioName = "drivingLicenseRadio";
+const firstCarRadioName = "firstCarRadio";
 var GenderOptions;
 (function (GenderOptions) {
     GenderOptions[GenderOptions["M"] = 0] = "M";
@@ -26,7 +28,30 @@ let currentUser = {
 };
 $(function () {
     var $signupForm = $(formId);
-    $signupForm.validate({ errorElement: 'em' });
+    $signupForm.validate({
+        errorElement: 'em',
+        rules: {
+            drivingLicenseRadio: { required: true },
+            firstCarRadio: { required: true }
+        },
+        messages: {
+            drivingLicenseRadio: {
+                required: "Please select a choice<br/>"
+            },
+            firstCarRadio: {
+                required: "Please select a choice<br/>"
+            }
+        },
+        errorPlacement: function (error, element) {
+            if (element.is(":radio")) {
+                error.insertAfter(element.parents('.container-radio'));
+            }
+            else {
+                // This is the default behavior 
+                error.insertAfter(element);
+            }
+        }
+    });
     $signupForm.formToWizard({
         submitButton: 'SaveAccount',
         nextBtnClass: 'btn btn-primary next',
@@ -41,6 +66,14 @@ $(function () {
             });
             return stepIsValid && UpdateValuesOfUserResponse(i);
         },
+        skipNextStep: function (i) {
+            // If on second step and age greater than 25 then skip page of first car choice. 
+            // Below 18 are already filtered out
+            if (i == 1 && (currentUser.age > 25)) {
+                return true;
+            }
+            return false;
+        },
         progress: function (i, count) {
             $('#progress-complete').width('' + (i / count * 100) + '%');
         }
@@ -51,11 +84,26 @@ $(function () {
 const UpdateValuesOfUserResponse = (i) => {
     switch (i) {
         case 0:
-            console.log($(ageTextId).val());
             currentUser.age = Number($(ageTextId).val());
-            console.log("currentUser = ");
-            console.log(currentUser);
             if (currentUser.age < 18) {
+                location.href = "/survey/endsurvey";
+                return false;
+            }
+            return true;
+        case 1:
+            var licenseRadioVal = $(`input[name="${drivingLicenseRadioName}"]:checked`).val();
+            if (licenseRadioVal)
+                currentUser.hasCarLicense = licenseRadioVal.toString() == "Yes";
+            if (!currentUser.hasCarLicense) {
+                location.href = "/survey/endsurvey";
+                return false;
+            }
+            return true;
+        case 2:
+            var firstCarRadioValue = $(`input[name="${firstCarRadioName}"]:checked`).val();
+            if (firstCarRadioValue)
+                currentUser.isFirstCar = firstCarRadioValue.toString() == "Yes";
+            if (currentUser.isFirstCar) {
                 location.href = "/survey/endsurvey";
                 return false;
             }

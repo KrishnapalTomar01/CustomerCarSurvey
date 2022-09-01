@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.error {
+  color: #b33;
+}
+
+.commands {
+  overflow: hidden;
+  margin-top: 30px;
+}

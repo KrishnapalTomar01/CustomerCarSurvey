@@ -1,7 +1,9 @@
-const formId = "#CarSurveyForm";
-const genderDropdownId = "#genderDropdown";
-const ageTextId = "#Age";
-const selectGenderId = "#selectGender"
+const formId: string = "#CarSurveyForm";
+const genderDropdownId: string = "#genderDropdown";
+const ageTextId: string = "#Age";
+const selectGenderId: string = "#selectGender";
+const drivingLicenseRadioName: string = "drivingLicenseRadio";
+const firstCarRadioName: string = "firstCarRadio";
 
 enum GenderOptions {
     M,
@@ -16,20 +18,47 @@ enum DriveTrain {
 }
 
 let currentUser: IUserResponse = {
-    age : 0,
-    gender : GenderOptions.M,
+    age: 0,
+    gender: GenderOptions.M,
     driveTrainType: null,
     hasCarLicense: null,
-    isFirstCar : null,
-    isWorriedForEmissions : null,
-    numberOfCars : null,
-    carTypes : null
+    isFirstCar: null,
+    isWorriedForEmissions: null,
+    numberOfCars: null,
+    carTypes: null
 };
 
 $(function () {
     var $signupForm = $(formId);
-
-    $signupForm.validate({ errorElement: 'em' });
+    
+    $signupForm.validate({
+        errorElement: 'em',
+        rules:
+        {
+            drivingLicenseRadio: { required: true },
+            firstCarRadio: { required: true }
+        },
+        messages:
+        {
+            drivingLicenseRadio:
+            {
+                required: "Please select a choice<br/>"
+            },
+            firstCarRadio:
+            {
+                required: "Please select a choice<br/>"
+            }
+        },
+        errorPlacement: function (error, element) {
+            if (element.is(":radio")) {
+                error.insertAfter(element.parents('.container-radio'));
+            }
+            else { 
+                // This is the default behavior 
+                error.insertAfter(element);
+            }
+        }
+    });
 
     $signupForm.formToWizard({
         submitButton: 'SaveAccount',
@@ -45,6 +74,14 @@ $(function () {
             });
             return stepIsValid && UpdateValuesOfUserResponse(i);
         },
+        skipNextStep: function (i : number) {
+            // If on second step and age greater than 25 then skip page of first car choice. 
+            // Below 18 are already filtered out
+            if(i == 1 && (currentUser.age > 25)){
+                return true;
+            } 
+            return false;
+        },
         progress: function (i, count) {
             $('#progress-complete').width('' + (i / count * 100) + '%');
         }
@@ -53,17 +90,35 @@ $(function () {
     InitializeGenderDropdown();
 });
 
-const UpdateValuesOfUserResponse = (i: number) : boolean => {
-    switch(i) {
-        case 0: 
+const UpdateValuesOfUserResponse = (i: number): boolean => {
+    switch (i) {
+        case 0:
             currentUser.age = Number($(ageTextId).val());
-            if(currentUser.age < 18){
+            if (currentUser.age < 18) {
                 location.href = "/survey/endsurvey";
                 return false;
             }
             return true;
         case 1:
-            break;
+            var licenseRadioVal = $(`input[name="${drivingLicenseRadioName}"]:checked`).val();
+            
+            if(licenseRadioVal) 
+                currentUser.hasCarLicense = licenseRadioVal.toString() == "Yes";
+            if (!currentUser.hasCarLicense) {
+                 location.href = "/survey/endsurvey";
+                 return false;
+            }
+            return true;
+        case 2:
+            var firstCarRadioValue = $(`input[name="${firstCarRadioName}"]:checked`).val();
+            
+            if(firstCarRadioValue) 
+                currentUser.isFirstCar = firstCarRadioValue.toString() == "Yes";
+            if (currentUser.isFirstCar) {
+                 location.href = "/survey/endsurvey";
+                 return false;
+            }
+            return true;
         default:
             return false;
     }
@@ -88,10 +143,8 @@ const InitializeGenderDropdown = () => {
         }))
     }
 
-    $(selectGenderId).on('change', function()
-    {
-        let genderVal : string  = $(this).val().toString();
+    $(selectGenderId).on('change', function () {
+        let genderVal: string = $(this).val().toString();
         currentUser.gender = (<any>GenderOptions)[genderVal];
     });
-
 }
