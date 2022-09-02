@@ -10,7 +10,9 @@ const carsCountId = "#carsCount";
 const carMakeFormId = "#carMakeForm";
 const selectCarMakeId = "#selectCarMake";
 const carModelId = "#carModel";
+const USER_RESPONSES = "USER_RESPONSES";
 import { GenderOptions, DriveTrain } from "./wizardFormType.js";
+import { setItemInLocalStorageArray } from "./helpers/localStorageHelper.js";
 let currentUser = {
     age: 0,
     gender: GenderOptions.M,
@@ -21,9 +23,10 @@ let currentUser = {
     numberOfCars: null,
     carTypes: null
 };
-$(function () {
+const radioValidationMessage = "Please select a choice<br/>";
+$(() => {
     var $signupForm = $(formId);
-    jQuery.validator.addMethod("BMWModelValidation", function (value, element) {
+    jQuery.validator.addMethod("BMWModelValidation", (value, element) => {
         const idVal = element.getAttribute("dataid");
         const carValue = $(selectCarMakeId + idVal).val().toString();
         const inputValue = value.toString();
@@ -39,17 +42,11 @@ $(function () {
             fuelEmissionsRadio: { required: true }
         },
         messages: {
-            drivingLicenseRadio: {
-                required: "Please select a choice<br/>"
-            },
-            fuelEmissionsRadio: {
-                required: "Please select a choice<br/>"
-            },
-            firstCarRadio: {
-                required: "Please select a choice<br/>"
-            }
+            drivingLicenseRadio: { required: radioValidationMessage },
+            fuelEmissionsRadio: { required: radioValidationMessage },
+            firstCarRadio: { required: radioValidationMessage }
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: (error, element) => {
             if (element.is(":radio")) {
                 error.insertAfter(element.parents('.container-radio'));
             }
@@ -64,7 +61,7 @@ $(function () {
         nextBtnClass: 'btn btn-primary next',
         prevBtnClass: 'btn btn-default prev',
         buttonTag: 'button',
-        validateBeforeNext: function (form, step, i) {
+        validateBeforeNext: (form, step, i) => {
             var stepIsValid = true;
             var validator = form.validate();
             $(':input', step).each(function (index) {
@@ -73,7 +70,7 @@ $(function () {
             });
             return stepIsValid && UpdateValuesOfUserResponse(i);
         },
-        skipNextStep: function (i) {
+        skipNextStep: (i) => {
             // If on second step and age greater than 25 then skip page of first car choice. 
             // Below 18 are already filtered out
             if (i == 1 && (currentUser.age > 25)) {
@@ -81,42 +78,47 @@ $(function () {
             }
             return false;
         },
-        progress: function (i, count) {
+        progress: (i, count) => {
             $('#progress-complete').width('' + (i / count * 100) + '%');
         }
     });
     $(formId).show();
     InitializeGenderDropdown();
     onChangeCarsCount();
-    $(formId).on("submit", (event) => {
-        event.preventDefault();
-        $(".car-model-class").each(function () {
-            $(this).rules("add", {
-                BMWModelValidation: true
-            });
-        });
-        var isValid = $(formId).valid();
-        if (isValid) {
-            let driveTrainVal = $(selectDriveTrainId).val().toString();
-            currentUser.driveTrainType = DriveTrain[driveTrainVal];
-            var fuelEmissionsRadioVal = $(`input[name="${fuelEmissionsRadioName}"]:checked`).val();
-            if (fuelEmissionsRadioVal)
-                currentUser.isWorriedForEmissions = fuelEmissionsRadioVal.toString() == "Yes";
-            var carCount = Number($(carsCountId).val());
-            currentUser.numberOfCars = carCount;
-            const carTypesArray = [];
-            for (var i = 1; i <= carCount; i++) {
-                const carType = {
-                    carMake: $(selectCarMakeId + i).val().toString(),
-                    modelName: $(carModelId + i).val().toString()
-                };
-                carTypesArray.push(carType);
-            }
-            currentUser.carTypes = carTypesArray;
-            console.log(currentUser);
-        }
-    });
+    $(formId).on("submit", onSubmitForm);
 });
+const onSubmitForm = (event) => {
+    event.preventDefault();
+    $(".car-model-class").each(function () {
+        $(this).rules("add", {
+            BMWModelValidation: true
+        });
+    });
+    var isValid = $(formId).valid();
+    if (isValid) {
+        let driveTrainVal = $(selectDriveTrainId).val().toString();
+        currentUser.driveTrainType = DriveTrain[driveTrainVal];
+        var fuelEmissionsRadioVal = $(`input[name="${fuelEmissionsRadioName}"]:checked`).val();
+        if (fuelEmissionsRadioVal)
+            currentUser.isWorriedForEmissions = fuelEmissionsRadioVal.toString() == "Yes";
+        var carCount = Number($(carsCountId).val());
+        currentUser.numberOfCars = carCount;
+        const carTypesArray = [];
+        for (var i = 1; i <= carCount; i++) {
+            const carType = {
+                carMake: $(selectCarMakeId + i).val().toString(),
+                modelName: $(carModelId + i).val().toString()
+            };
+            carTypesArray.push(carType);
+        }
+        currentUser.carTypes = carTypesArray;
+        endSurvey();
+    }
+};
+const endSurvey = () => {
+    setItemInLocalStorageArray(USER_RESPONSES, currentUser);
+    location.href = "/survey/endsurvey";
+};
 const onChangeCarsCount = () => {
     $(carsCountId).on('input', (event) => {
         if ($(carsCountId).valid()) {
@@ -127,11 +129,11 @@ const onChangeCarsCount = () => {
                 type: 'POST',
                 data: { num },
                 cache: false,
-                success: function (data) {
+                success: (data) => {
                     //data contains the html generated by partial view
                     $(carMakeFormId).empty().append(data);
                 },
-                error: function (jxhr) {
+                error: (jxhr) => {
                     if (typeof (console) != 'undefined') {
                         console.log(jxhr.status);
                         console.log(jxhr.responseText);
@@ -149,7 +151,7 @@ const UpdateValuesOfUserResponse = (i) => {
         case 0:
             currentUser.age = Number($(ageTextId).val());
             if (currentUser.age < 18) {
-                location.href = "/survey/endsurvey";
+                endSurvey();
                 return false;
             }
             return true;
@@ -158,7 +160,7 @@ const UpdateValuesOfUserResponse = (i) => {
             if (licenseRadioVal)
                 currentUser.hasCarLicense = licenseRadioVal.toString() == "Yes";
             if (!currentUser.hasCarLicense) {
-                location.href = "/survey/endsurvey";
+                endSurvey();
                 return false;
             }
             return true;
@@ -167,7 +169,7 @@ const UpdateValuesOfUserResponse = (i) => {
             if (firstCarRadioValue)
                 currentUser.isFirstCar = firstCarRadioValue.toString() == "Yes";
             if (currentUser.isFirstCar) {
-                location.href = "/survey/endsurvey";
+                endSurvey();
                 return false;
             }
             return true;
