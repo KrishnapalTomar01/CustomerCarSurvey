@@ -4,18 +4,7 @@ const ageTextId: string = "#Age";
 const selectGenderId: string = "#selectGender";
 const drivingLicenseRadioName: string = "drivingLicenseRadio";
 const firstCarRadioName: string = "firstCarRadio";
-
-enum GenderOptions {
-    M,
-    F,
-    Other
-}
-
-enum DriveTrain {
-    FWD = "FWD",
-    RWD = "RWD",
-    DontKnow = "I Don't know"
-}
+import { GenderOptions, DriveTrain } from "./wizardFormType.js";
 
 let currentUser: IUserResponse = {
     age: 0,
@@ -30,7 +19,7 @@ let currentUser: IUserResponse = {
 
 $(function () {
     var $signupForm = $(formId);
-    
+
     $signupForm.validate({
         errorElement: 'em',
         rules:
@@ -53,7 +42,7 @@ $(function () {
             if (element.is(":radio")) {
                 error.insertAfter(element.parents('.container-radio'));
             }
-            else { 
+            else {
                 // This is the default behavior 
                 error.insertAfter(element);
             }
@@ -74,12 +63,12 @@ $(function () {
             });
             return stepIsValid && UpdateValuesOfUserResponse(i);
         },
-        skipNextStep: function (i : number) {
+        skipNextStep: function (i: number) {
             // If on second step and age greater than 25 then skip page of first car choice. 
             // Below 18 are already filtered out
-            if(i == 1 && (currentUser.age > 25)){
+            if (i == 1 && (currentUser.age > 25)) {
                 return true;
-            } 
+            }
             return false;
         },
         progress: function (i, count) {
@@ -87,6 +76,7 @@ $(function () {
         }
     });
     console.log("Form initialized");
+    $("#CarSurveyForm").show();
     InitializeGenderDropdown();
 });
 
@@ -101,22 +91,22 @@ const UpdateValuesOfUserResponse = (i: number): boolean => {
             return true;
         case 1:
             var licenseRadioVal = $(`input[name="${drivingLicenseRadioName}"]:checked`).val();
-            
-            if(licenseRadioVal) 
+
+            if (licenseRadioVal)
                 currentUser.hasCarLicense = licenseRadioVal.toString() == "Yes";
             if (!currentUser.hasCarLicense) {
-                 location.href = "/survey/endsurvey";
-                 return false;
+                location.href = "/survey/endsurvey";
+                return false;
             }
             return true;
         case 2:
             var firstCarRadioValue = $(`input[name="${firstCarRadioName}"]:checked`).val();
-            
-            if(firstCarRadioValue) 
+
+            if (firstCarRadioValue)
                 currentUser.isFirstCar = firstCarRadioValue.toString() == "Yes";
             if (currentUser.isFirstCar) {
-                 location.href = "/survey/endsurvey";
-                 return false;
+                location.href = "/survey/endsurvey";
+                return false;
             }
             return true;
         default:

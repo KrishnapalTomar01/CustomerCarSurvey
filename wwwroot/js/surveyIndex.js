@@ -4,18 +4,7 @@ const ageTextId = "#Age";
 const selectGenderId = "#selectGender";
 const drivingLicenseRadioName = "drivingLicenseRadio";
 const firstCarRadioName = "firstCarRadio";
-var GenderOptions;
-(function (GenderOptions) {
-    GenderOptions[GenderOptions["M"] = 0] = "M";
-    GenderOptions[GenderOptions["F"] = 1] = "F";
-    GenderOptions[GenderOptions["Other"] = 2] = "Other";
-})(GenderOptions || (GenderOptions = {}));
-var DriveTrain;
-(function (DriveTrain) {
-    DriveTrain["FWD"] = "FWD";
-    DriveTrain["RWD"] = "RWD";
-    DriveTrain["DontKnow"] = "I Don't know";
-})(DriveTrain || (DriveTrain = {}));
+import { GenderOptions } from "./wizardFormType.js";
 let currentUser = {
     age: 0,
     gender: GenderOptions.M,
@@ -79,6 +68,7 @@ $(function () {
         }
     });
     console.log("Form initialized");
+    $("#CarSurveyForm").show();
     InitializeGenderDropdown();
 });
 const UpdateValuesOfUserResponse = (i) => {
