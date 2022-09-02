@@ -1,0 +1,20 @@
+@model int
+
+@for (int i = 1; i <= Model; i++)
+{
+    <div class="form-group row my-2">
+        <div class="col-md-6">
+            <span class="label me-2">Make Car @i: </span>
+            <select id="selectCarMake@(i)" name="carMake@(i)">
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="BMW">BMW</option>
+                <option value="Mercedes">Mercedes</option>
+                <option value="Hyundai">Hyundai</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <span class="label me-2">Model Car @i: </span>
+            <input id="carModel@(i)" class="car-model-class" dataId="@(i)" name="carModel@(i)" type="text" required />
+        </div>
+    </div>
+}

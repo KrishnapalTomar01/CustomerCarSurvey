@@ -49,7 +49,11 @@ public class SurveyController : Controller
 
         return View();
     }
-
+    [HttpPost]
+    public ActionResult PartialViewCarForm(int num)
+    {
+        return PartialView("_CarMakeLayout", num);
+    }
     public IActionResult EndSurvey(){
         return View();
     }
