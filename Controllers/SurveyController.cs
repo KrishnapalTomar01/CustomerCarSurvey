@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using car_survey_app.Models;
-using Newtonsoft.Json;
 
-namespace dotnet_core_ts.Controllers;
+namespace car_survey_app.Controllers;
 
 public class SurveyController : Controller
 {

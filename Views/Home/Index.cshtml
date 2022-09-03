@@ -3,13 +3,8 @@
 }
 
 <div class="flex-container">
-    <div class="flex-item" onclick="GoToSurveyPage()">
+    <div class="flex-item card" onclick="MYAPP.appRouteFunctions.GoToSurveyPage()">
         Take Survey
     </div>
-    <div class="flex-item">Show statistics</div>
+    <div class="flex-item card" onclick="MYAPP.appRouteFunctions.GoToStatisticsPage()">Show statistics</div>
 </div>
-
-@section Scripts
-{
-    <script src="~/js/index.js"></script>
-}

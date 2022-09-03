@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using car_survey_app.Models;
-using Newtonsoft.Json;
 
 namespace car_survey_app.Controllers;
 

@@ -10,10 +10,9 @@ const carsCountId: string = "#carsCount";
 const carMakeFormId: string = "#carMakeForm";
 const selectCarMakeId: string = "#selectCarMake";
 const carModelId: string = "#carModel";
-const USER_RESPONSES = "USER_RESPONSES";
-
-import { GenderOptions, DriveTrain, UserRespondentType } from "./modelTypes.js";
-import { setItemInLocalStorageArray } from "./helpers/localStorageHelper.js"
+import { IUserResponse, GenderOptions, 
+    wizardFormType, DriveTrain, ICarType, UserRespondentType, USER_RESPONSES } from "./modelTypes";
+import { appLocalStorage } from "./helpers/localStorageHelper";
 
 let currentUser: IUserResponse = {
     age: 0,
@@ -26,67 +25,76 @@ let currentUser: IUserResponse = {
     carTypes: null
 };
 const radioValidationMessage = "Please select a choice<br/>";
+declare global {
+    export interface JQuery {
+        formToWizard(obj: wizardFormType) : void,
+    }
+}
 
-$(() => {
-    var $signupForm = $(formId);
-    jQuery.validator.addMethod("BMWModelValidation", AddBMWValidationFunction, "Model value not valid for BMW");
-
-    $signupForm.validate({
-        errorElement: 'em',
-        rules:
-        {
-            drivingLicenseRadio: { required: true },
-            firstCarRadio: { required: true },
-            fuelEmissionsRadio: { required: true }
-        },
-        messages:
-        {
-            drivingLicenseRadio: { required: radioValidationMessage },
-            fuelEmissionsRadio: { required: radioValidationMessage },
-            firstCarRadio: { required: radioValidationMessage }
-        },
-        errorPlacement: (error, element) => {
-            if (element.is(":radio")) {
-                error.insertAfter(element.parents('.container-radio'));
-            }
-            else {
-                // This is the default behavior 
-                error.insertAfter(element);
-            }
-        }
-    });
-
-    $signupForm.formToWizard({
-        submitButton: 'SubmitBtn',
-        nextBtnClass: 'btn btn-primary next',
-        prevBtnClass: 'btn btn-default prev',
-        buttonTag: 'button',
-        validateBeforeNext: (form, step, i) => {
-            var stepIsValid = true;
-            var validator = form.validate();
-            $(':input', step).each(function (index) {
-                var xy = validator.element(this);
-                stepIsValid = stepIsValid && (typeof xy == 'undefined' || xy);
+export namespace surveyForm {
+    export const InitializeSurveyForm = () => {
+        $(() => {
+            var $signupForm = $(formId);
+            jQuery.validator.addMethod("BMWModelValidation", AddBMWValidationFunction, "Model value not valid for BMW");
+        
+            $signupForm.validate({
+                errorElement: 'em',
+                rules:
+                {
+                    drivingLicenseRadio: { required: true },
+                    firstCarRadio: { required: true },
+                    fuelEmissionsRadio: { required: true }
+                },
+                messages:
+                {
+                    drivingLicenseRadio: { required: radioValidationMessage },
+                    fuelEmissionsRadio: { required: radioValidationMessage },
+                    firstCarRadio: { required: radioValidationMessage }
+                },
+                errorPlacement: (error, element) => {
+                    if (element.is(":radio")) {
+                        error.insertAfter(element.parents('.container-radio'));
+                    }
+                    else {
+                        // This is the default behavior 
+                        error.insertAfter(element);
+                    }
+                }
             });
-            return stepIsValid && UpdateValuesOfUserResponse(i);
-        },
-        skipNextStep: (i: number) => {
-            // If on second step and age greater than 25 then skip page of first car choice. 
-            // Below 18 are already filtered out
-            if (i == 1 && (currentUser.age > 25)) {
-                return true;
-            }
-            return false;
-        },
-        progress: (i, count) => {
-            $('#progress-complete').width('' + (i / count * 100) + '%');
-        }
-    });
-    $(formId).show();
-    InitializeGenderDropdown();
-    onChangeCarsCount();
-    $(formId).on("submit", onSubmitForm);
-});
+        
+            $signupForm.formToWizard({
+                submitButton: 'SubmitBtn',
+                nextBtnClass: 'btn btn-primary next',
+                prevBtnClass: 'btn btn-default prev',
+                buttonTag: 'button',
+                validateBeforeNext: (form, step, i) => {
+                    var stepIsValid = true;
+                    var validator = form.validate();
+                    $(':input', step).each(function (index) {
+                        var xy = validator.element(this);
+                        stepIsValid = stepIsValid && (typeof xy == 'undefined' || xy);
+                    });
+                    return stepIsValid && UpdateValuesOfUserResponse(i);
+                },
+                skipNextStep: (i: number) => {
+                    // If on second step and age greater than 25 then skip page of first car choice. 
+                    // Below 18 are already filtered out
+                    if (i == 1 && (currentUser.age > 25)) {
+                        return true;
+                    }
+                    return false;
+                },
+                progress: (i: number, count: number) => {
+                    $('#progress-complete').width('' + (i / count * 100) + '%');
+                }
+            });
+            $(formId).show();
+            InitializeGenderDropdown();
+            onChangeCarsCount();
+            $(formId).on("submit", onSubmitForm);
+        });
+    }
+}
 
 const onSubmitForm = (event: JQuery.Event) => {
     event.preventDefault();
@@ -123,7 +131,7 @@ const onSubmitForm = (event: JQuery.Event) => {
 }
 
 const endSurvey = (respondentType: number) => {
-    setItemInLocalStorageArray<IUserResponse>(USER_RESPONSES, currentUser);
+    appLocalStorage.setItemInLocalStorageArray<IUserResponse>(USER_RESPONSES, currentUser);
     location.href = `/survey/endsurvey/${respondentType}`;
 }
 
