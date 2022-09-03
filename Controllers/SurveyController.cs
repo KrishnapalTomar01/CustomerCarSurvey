@@ -23,8 +23,9 @@ public class SurveyController : Controller
     {
         return PartialView("_CarMakeLayout", num);
     }
-    public IActionResult EndSurvey(){
-        return View();
+    public IActionResult EndSurvey(int id)
+    {
+        return View((UserRespondentType)id);
     }
 
 }

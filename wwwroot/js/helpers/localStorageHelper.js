@@ -1,4 +1,4 @@
-const getLocalStorageValue = (key) => {
+export const getLocalStorageValue = (key) => {
     return JSON.parse(localStorage.getItem(key));
 };
 const setItemToLocalStorage = (key, value) => {

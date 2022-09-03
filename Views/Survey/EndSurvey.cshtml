@@ -1,7 +1,28 @@
 @{
     ViewData["Title"] = "End Survey";
 }
-@model string
-<div>Thanks for your time.</div>
+@model UserRespondentType
 
-<div>@Model</div>
+@switch(Model)
+{
+    case UserRespondentType.Adolescents:
+        <div class="survey-message">Thank you for taking the time to submit your response.</div>
+        break;
+
+    case UserRespondentType.FirstTimers:
+        <div class="survey-message">We are targeting more experienced clients, thank you for your interest.</div>
+        break;
+
+    case UserRespondentType.Unlicensed:
+        <div class="survey-message">Thank you for showing interest in this survey.</div>
+        break;
+    
+    case UserRespondentType.Targetables:
+        <div class="survey-message">Your response is submitted. Thank you for your time.</div>
+        break;
+
+    default:
+        <div class="survey-message">Thank you for your time.</div>    
+        break;
+}
+<div class="mt-3 fs-5">Go to <a href="/">Home</a> page </div>

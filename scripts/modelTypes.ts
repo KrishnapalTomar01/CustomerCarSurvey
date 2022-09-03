@@ -9,9 +9,9 @@ type wizardFormType = {
 }
 
 export enum GenderOptions {
-    M,
-    F,
-    Other
+    M = "M",
+    F = "F",
+    Other = "Other"
 }
 
 export enum DriveTrain
@@ -19,6 +19,13 @@ export enum DriveTrain
     FWD = "FWD",
     RWD = "RWD",
     DontKnow = "I Don't know"
+}
+
+export enum UserRespondentType {
+    Adolescents,
+    Unlicensed,
+    FirstTimers,
+    Targetables
 }
 
 declare global {

@@ -11,7 +11,7 @@ const carMakeFormId = "#carMakeForm";
 const selectCarMakeId = "#selectCarMake";
 const carModelId = "#carModel";
 const USER_RESPONSES = "USER_RESPONSES";
-import { GenderOptions, DriveTrain } from "./wizardFormType.js";
+import { GenderOptions, DriveTrain, UserRespondentType } from "./modelTypes.js";
 import { setItemInLocalStorageArray } from "./helpers/localStorageHelper.js";
 let currentUser = {
     age: 0,
@@ -26,14 +26,7 @@ let currentUser = {
 const radioValidationMessage = "Please select a choice<br/>";
 $(() => {
     var $signupForm = $(formId);
-    jQuery.validator.addMethod("BMWModelValidation", (value, element) => {
-        const idVal = element.getAttribute("dataid");
-        const carValue = $(selectCarMakeId + idVal).val().toString();
-        const inputValue = value.toString();
-        const patternOne = /^M?\d{3}(d|i)?$/i;
-        const patternTwo = /^(X|Z)\d{1}$/i;
-        return carValue != "BMW" || (carValue == "BMW" && (patternOne.test(inputValue) || patternTwo.test(inputValue)));
-    }, "Model value not valid for BMW");
+    jQuery.validator.addMethod("BMWModelValidation", AddBMWValidationFunction, "Model value not valid for BMW");
     $signupForm.validate({
         errorElement: 'em',
         rules: {
@@ -112,12 +105,12 @@ const onSubmitForm = (event) => {
             carTypesArray.push(carType);
         }
         currentUser.carTypes = carTypesArray;
-        endSurvey();
+        endSurvey(UserRespondentType.Targetables);
     }
 };
-const endSurvey = () => {
+const endSurvey = (respondentType) => {
     setItemInLocalStorageArray(USER_RESPONSES, currentUser);
-    location.href = "/survey/endsurvey";
+    location.href = `/survey/endsurvey/${respondentType}`;
 };
 const onChangeCarsCount = () => {
     $(carsCountId).on('input', (event) => {
@@ -151,31 +144,32 @@ const UpdateValuesOfUserResponse = (i) => {
         case 0:
             currentUser.age = Number($(ageTextId).val());
             if (currentUser.age < 18) {
-                endSurvey();
+                endSurvey(UserRespondentType.Adolescents);
                 return false;
             }
-            return true;
+            break;
         case 1:
             var licenseRadioVal = $(`input[name="${drivingLicenseRadioName}"]:checked`).val();
             if (licenseRadioVal)
                 currentUser.hasCarLicense = licenseRadioVal.toString() == "Yes";
             if (!currentUser.hasCarLicense) {
-                endSurvey();
+                endSurvey(UserRespondentType.Unlicensed);
                 return false;
             }
-            return true;
+            break;
         case 2:
             var firstCarRadioValue = $(`input[name="${firstCarRadioName}"]:checked`).val();
             if (firstCarRadioValue)
                 currentUser.isFirstCar = firstCarRadioValue.toString() == "Yes";
             if (currentUser.isFirstCar) {
-                endSurvey();
+                endSurvey(UserRespondentType.FirstTimers);
                 return false;
             }
-            return true;
+            break;
         default:
             return false;
     }
+    return true;
 };
 const InitializeGenderDropdown = () => {
     var $GenderDropdown = $(genderDropdownId);
@@ -195,5 +189,16 @@ const InitializeGenderDropdown = () => {
         let genderVal = $(this).val().toString();
         currentUser.gender = GenderOptions[genderVal];
     });
+};
+const AddBMWValidationFunction = (value, element) => {
+    const idVal = element.getAttribute("dataid");
+    const carMakeValue = $(selectCarMakeId + idVal).val().toString();
+    const carModelinputValue = value.toString();
+    const patternOne = /^M?\d{3}(d|i)?$/i;
+    const patternTwo = /^(X|Z)\d{1}$/i;
+    if (carMakeValue == "BMW") {
+        return patternOne.test(carModelinputValue) || patternTwo.test(carModelinputValue);
+    }
+    return true;
 };
 //# sourceMappingURL=surveyIndex.js.map

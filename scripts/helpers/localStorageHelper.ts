@@ -1,4 +1,4 @@
-const getLocalStorageValue = <T>(key: string): T => {
+export const getLocalStorageValue = <T>(key: string): T => {
     return <T>JSON.parse(localStorage.getItem(key));
 }
 

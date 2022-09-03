@@ -1,5 +1,12 @@
 namespace car_survey_app.Models;
 using System.ComponentModel.DataAnnotations;
+
+public enum UserRespondentType {
+    Adolescents,
+    Unlicensed,
+    FirstTimers,
+    Targetables
+}
 public class CarType
 {
     public string CarMake { get; set; }
