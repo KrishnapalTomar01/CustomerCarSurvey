@@ -2,20 +2,20 @@
 
 ## Run Application
 
-### 1. Prerequisite
+### 1. Prerequisite **
 
 Node js and dotnet SDK is required to run the application.  
 Install Node js - https://nodejs.org/en/download/ (Latest LTS Version: 16.17.0)  
-Install dotnet SDK - https://dotnet.microsoft.com/en-us/download (Latest - Dotnet core 6.0)
+Install dotnet SDK - https://dotnet.microsoft.com/en-us/download (Download Latest - Dotnet core 6.0)
 
 ### 2. Clone application
 Open terminal to folder where you want the project to be placed.  
 Run : 
-> git clone https://github.com/KrishnapalTomar01/CarCustomerSurvey.git
+> git clone https://github.com/KrishnapalTomar01/CustomerCarSurvey.git
 
 ### 3. Run App
 
-Application will run at https://localhost:7134 or http://localhost:5211 [Defined in LaunchSettings file](properties/launchSettings.json)
+Application will run at https://localhost:7129 or http://localhost:5108 [Defined in LaunchSettings file](properties/launchSettings.json)
 
 #### a) From Visual Studio : 
 Open .csproj file of project to open the project.   
@@ -33,7 +33,7 @@ Run command :
 > dotnet build 
 > dotnet run
 
-Open https://localhost:7134 in browser
+Open https://localhost:7129 in browser
 
 
 
