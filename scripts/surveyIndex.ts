@@ -1,15 +1,15 @@
-const formId: string = "#CarSurveyForm";
-const genderDropdownId: string = "#genderDropdown";
-const ageTextId: string = "#Age";
-const selectGenderId: string = "#selectGender";
-const drivingLicenseRadioName: string = "drivingLicenseRadio";
-const firstCarRadioName: string = "firstCarRadio";
-const selectDriveTrainId: string = "#selectDriveTrain";
-const fuelEmissionsRadioName: string = "fuelEmissionsRadio";
-const carsCountId: string = "#carsCount";
-const carMakeFormId: string = "#carMakeForm";
-const selectCarMakeId: string = "#selectCarMake";
-const carModelId: string = "#carModel";
+const formId = "#CarSurveyForm";
+const genderDropdownId = "#genderDropdown";
+const ageTextId = "#Age";
+const selectGenderId = "#selectGender";
+const drivingLicenseRadioName = "drivingLicenseRadio";
+const firstCarRadioName = "firstCarRadio";
+const selectDriveTrainId = "#selectDriveTrain";
+const fuelEmissionsRadioName = "fuelEmissionsRadio";
+const carsCountId = "#carsCount";
+const carMakeFormId = "#carMakeForm";
+const selectCarMakeId = "#selectCarMake";
+const carModelId = "#carModel";
 import { IUserResponse, GenderOptions, 
     wizardFormType, DriveTrain, ICarType, UserRespondentType, USER_RESPONSES } from "./modelTypes";
 import { appLocalStorage } from "./helpers/localStorageHelper";

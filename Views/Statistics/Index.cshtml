@@ -4,12 +4,26 @@
 
 <div class="container">
     <h2>Survey Statistics</h2>
-    <canvas id="respondentsCount" width="100" height="100"></canvas>
-
+    <div id="noData"></div>
+    <div id="charts-container">
+        <div class="row mt-5">
+            <canvas class="me-5 card" id="respondentsCount" width="400" height="400"></canvas>
+            <canvas id="respondentsPercentage" class="me-5 card" width="400" height="400"></canvas>
+            <canvas class="card" id="fuelEmissionPie" width="400" height="400"></canvas>
+        </div>
+        <div class="row mt-5">
+            <canvas id="driveTrainPie" class="me-5 card" width="400" height="400"></canvas>
+            <canvas id="carMakeModelChart" class="me-5 card" width="400" height="400"></canvas>
+            <div class="card card-style">
+                <span> Average amount of cars in a family :</span>
+                <h3 id="averageCarsId"></h3>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    <script>
-        MYAPP.statisticsPage.InitializePage()
-    </script>
+<script>
+    MYAPP.statisticsPage.InitializePage()
+</script>
 }
