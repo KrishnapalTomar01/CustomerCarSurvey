@@ -54,18 +54,20 @@ export namespace statisticsPage {
 
             const usersCountForEmission = targetableUsers.filter((value) => value.isWorriedForEmissions).length;
             const percentUserEmissions = calculatePercentage(usersCountForEmission, numberOfTargetables);
+            const percentUserNonEmissions = calculatePercentage(numberOfTargetables - usersCountForEmission, numberOfTargetables);
             let percentDataEmissions: number[] = [
                 percentUserEmissions,
-                100 - percentUserEmissions
+                percentUserNonEmissions
             ];
             const usersCareForEmissionLabels = ['Targetables that care about fuel emissions in %', 'Targetables that don\'t care about fuel emissions in %'];
             createPieChart(fuelEmissionPieId, percentDataEmissions, usersCareForEmissionLabels);
             
             const countFWD = targetableUsers.filter((value) => value.driveTrainType == DriveTrain.FWD || value.driveTrainType == DriveTrain.DontKnow).length;
             const percentUserFWD = calculatePercentage(countFWD, numberOfTargetables);
+            const percentNonUserFWD = calculatePercentage(numberOfTargetables-countFWD, numberOfTargetables);
             let percentDataFWD: number[] = [
                 percentUserFWD,
-                100 - percentUserFWD
+                percentNonUserFWD
             ];
             const usersFWDLabels = ['Targetables that picked FWD or “I don\'t know” for drivetrain in %', 'Targetable that picked RWD for drivetrain in %'];
             createPieChart(driveTrainPieId, percentDataFWD, usersFWDLabels);
@@ -104,7 +106,7 @@ const createBarChartRespondents = (chartId: string, data: number[], labels: stri
 
 const calculatePercentage = (value: number, total: number): number => {
     const calcValue = value / total * 100;
-    return Number(calcValue.toFixed(2));
+    return isNaN(calcValue) ? 0 : Number(calcValue.toFixed(2));
 }
 
 const createPieChart = (chartId: string, data: number[], labels: string[]) => {
@@ -131,7 +133,8 @@ const initializeAverageCarsCount = (targetableUsers: IUserResponse[]) => {
         carsCount += value.numberOfCars;
     });
     let averageCars = carsCount / targetableUsers.length;
-    $(averageCarsId).html(averageCars.toFixed(2)); 
+    let htmlText = isNaN(averageCars) ? "0" : Number(averageCars.toFixed(2)).toString();
+    $(averageCarsId).html(htmlText); 
 }
 
 const createStackChartMakeModel = (chartId: string, targetableUsers: IUserResponse[]) => {
@@ -183,6 +186,10 @@ const createStackChartMakeModel = (chartId: string, targetableUsers: IUserRespon
             responsive: false,
             legend: {
                 position: 'right'
+            },
+            title: {
+                display: true,
+                text: 'Car Make and Model distribution'
             },
             scales: {
                 xAxes: [{
