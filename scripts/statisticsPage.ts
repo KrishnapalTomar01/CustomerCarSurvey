@@ -189,7 +189,8 @@ const createStackChartMakeModel = (chartId: string, targetableUsers: IUserRespon
             },
             title: {
                 display: true,
-                text: 'Car Make and Model distribution'
+                text: 'Car Make and Model distribution',
+                position: 'left'
             },
             scales: {
                 xAxes: [{
