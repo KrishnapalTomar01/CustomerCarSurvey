@@ -19,8 +19,7 @@ Application will run at https://localhost:7129 or http://localhost:5108 [Defined
 
 #### a) From command line:
 Locate to application folder on CLI / terminal where .csproj is placed (Under Folder - CustomerCarSurvey).   
-Run command :
-> dotnet build (optional)
+Run command :  
 > dotnet run
 
 Open https://localhost:7129 in browser
